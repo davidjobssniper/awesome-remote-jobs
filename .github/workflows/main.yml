@@ -1,0 +1,38 @@
+name: Daily Job Update
+
+# Chạy mỗi ngày lúc 8:00 AM UTC (khoảng 3h chiều VN)
+# Hoặc chạy thủ công (workflow_dispatch)
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install aws-sdk
+
+      - name: Run Job Fetcher Script
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "us-east-1" # Đổi lại nếu DB của Chúa công ở vùng khác
+        run: node update-jobs.js
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "JobSniper Bot"
+          git config --global user.email "bot@jobsniper.pro"
+          git add README.md archive/
+          git commit -m "🤖 Auto-update jobs: $(date +'%Y-%m-%d')" || echo "No changes to commit"
+          git push
