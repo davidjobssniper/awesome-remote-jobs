@@ -77,7 +77,7 @@ function generateMarkdown(jobs, dateString) {
         md += `| [**${shortTitle}**](${jobUrl}) | ${safeCompany} | ${safeSalary} | ${safeStack} |\n`;
     });
 
-    md += `\n---\n*Bot updated automatically at: ${new Date().toISOString()}*\n`;
+    md += `\n---\n*Updated at: ${new Date().toISOString()}*\n`;
     md += `\n📂 **[Browse Previous Days in Archive](./archive/)**`;
     return md;
 }
