@@ -5,7 +5,6 @@ const path = require('path');
 const API_URL = "https://www.jobsniper.pro/api/jobs";
 const WEBSITE_URL = "https://jobsniper.pro";
 
-// FIX: Hàm tiện ích giúp dọn dẹp text, chống vỡ bảng Markdown
 function sanitizeMarkdown(text) {
     if (!text) return "N/A";
     return String(text).replace(/\|/g, '-').replace(/[\r\n]+/g, ' ').trim();
@@ -45,7 +44,6 @@ async function fetchTopJobs() {
 }
 
 function generateMarkdown(jobs, dateString) {
-    // 🚀 SEO TỐI ƯU: Thêm Badges cho chuyên nghiệp, nhấn mạnh keyword
     let md = `# 🎯 Awesome Remote Software Jobs (2026)
 
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
@@ -67,17 +65,13 @@ function generateMarkdown(jobs, dateString) {
         let salary = job.salary && job.salary !== "Negotiable" ? job.salary : "Competitive";
         let stackInfo = (job.tags && job.tags.length > 0) ? job.tags.slice(0, 2).join(', ') : "Backend";
         
-        // FIX BUG: Khai báo bằng let, sanitize trước khi cắt
         let safeTitle = sanitizeMarkdown(job.title);
         let shortTitle = safeTitle.length > 50 ? safeTitle.substring(0, 47) + "..." : safeTitle;
 
-        // Sanitize toàn bộ data để bảng không bao giờ vỡ
         let safeCompany = sanitizeMarkdown(job.company);
         let safeSalary = sanitizeMarkdown(salary);
         let safeStack = sanitizeMarkdown(stackInfo);
 
-        // 🎯 TUYỆT KỸ SEO: Gắn link thẳng vào Job Title (Bỏ cột Apply dư thừa)
-        // Đảm bảo URL có dấu / trước ?slug= để chuẩn format
         const jobUrl = `${WEBSITE_URL}/?slug=${job.slug}`;
         
         md += `| [**${shortTitle}**](${jobUrl}) | ${safeCompany} | ${safeSalary} | ${safeStack} |\n`;
@@ -99,17 +93,14 @@ async function run() {
     const today = new Date().toISOString().split('T')[0]; 
     const markdownContent = generateMarkdown(jobs, today);
 
-    // 1. Cập nhật README.md
     fs.writeFileSync('README.md', markdownContent);
     console.log("✅ Updated README.md");
 
-    // 2. Tạo file Archive (Kho SEO)
     const archiveDir = path.join(__dirname, 'archive');
     if (!fs.existsSync(archiveDir)){
         fs.mkdirSync(archiveDir);
     }
     
-    // SEO TỐI ƯU: Cho Archive file một cái tiêu đề khác đi một chút để tránh trùng lặp nội dung 100%
     const archiveMarkdown = markdownContent.replace(
         `# 🎯 Awesome Remote Software Jobs (2026)`, 
         `# 🗄️ Job Archive: ${today}`
