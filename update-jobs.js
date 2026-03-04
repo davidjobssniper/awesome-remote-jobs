@@ -8,7 +8,6 @@ const WEBSITE_URL = "https://jobsniper.pro";
 // FIX: Hàm tiện ích giúp dọn dẹp text, chống vỡ bảng Markdown
 function sanitizeMarkdown(text) {
     if (!text) return "N/A";
-    // Xóa dấu | và ký tự xuống dòng để không làm hỏng cấu trúc bảng
     return String(text).replace(/\|/g, '-').replace(/[\r\n]+/g, ' ').trim();
 }
 
@@ -24,24 +23,20 @@ async function fetchTopJobs() {
         const data = await response.json();
         let jobsList = data.jobs || [];
 
-        // Xử lý cấu trúc JSON đặc thù của Chúa công (lồng trong key "0", "1",...)
         const cleanJobs = jobsList.map(item => {
             const keys = Object.keys(item);
-            // Nếu item có dạng { "0": { title: "..." } }, ta rút lõi nó ra
             if (keys.length === 1 && !isNaN(keys[0])) {
                 return item[keys[0]];
             }
-            return item; // Trả về nguyên bản nếu là object bình thường
+            return item;
         });
 
-        // Sắp xếp mới nhất lên đầu (đề phòng API trả về lộn xộn)
         cleanJobs.sort((a, b) => {
             const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
             const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
             return timeB - timeA;
         });
         
-        // Lấy đúng 10 job đầu tiên
         return cleanJobs.slice(0, 10); 
     } catch (e) {
         console.error("❌ API Fetch Error:", e);
@@ -50,33 +45,46 @@ async function fetchTopJobs() {
 }
 
 function generateMarkdown(jobs, dateString) {
-    let md = `# 🎯 Awesome Remote Software Jobs
-*Daily updated curated list of high-paying remote developer jobs.*
+    // 🚀 SEO TỐI ƯU: Thêm Badges cho chuyên nghiệp, nhấn mạnh keyword
+    let md = `# 🎯 Awesome Remote Software Jobs (2026)
 
-🔥 **[Join our Elite Telegram Channel to get real-time alerts](${WEBSITE_URL})**
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
+![Updated](https://img.shields.io/badge/Last_Update-${dateString}-blue?style=for-the-badge)
+
+*A daily curated list of high-paying, verified remote developer jobs for Senior Engineers.*
+
+🔥 **[Join our Elite JobSniper Platform to get real-time alerts](${WEBSITE_URL})**
 
 ---
 
-### 🚀 Top 10 Jobs Today (${dateString})
+### 🚀 Top 10 Remote Roles Today (${dateString})
 
-| Role | Company | Salary | Stack | Apply |
-|------|---------|--------|-------|-------|
+| Role (Click to Apply) | Company | Salary | Tech Stack |
+|-----------------------|---------|--------|------------|
 `;
 
     jobs.forEach(job => {
-        const salary = job.salary && job.salary !== "Negotiable" ? job.salary : "Competitive";
-        // Vì API trả về mảng tags, ta lấy tối đa 2 tag đầu tiên hiển thị cho gọn
-        const stackInfo = (job.tags && job.tags.length > 0) ? job.tags.slice(0, 2).join(', ') : "Various";
+        let salary = job.salary && job.salary !== "Negotiable" ? job.salary : "Competitive";
+        let stackInfo = (job.tags && job.tags.length > 0) ? job.tags.slice(0, 2).join(', ') : "Backend";
         
-        // Cắt ngắn title nếu quá dài để bảng Markdown không bị vỡ
-        const shortTitle = job.title.length > 45 ? job.title.substring(0, 42) + "..." : job.title;
-        shortTitle = sanitizeMarkdown(shortTitle);
+        // FIX BUG: Khai báo bằng let, sanitize trước khi cắt
+        let safeTitle = sanitizeMarkdown(job.title);
+        let shortTitle = safeTitle.length > 50 ? safeTitle.substring(0, 47) + "..." : safeTitle;
 
-        md += `| **${shortTitle}** | ${job.company} | ${salary} | ${stackInfo} | [View Details](${WEBSITE_URL}?slug=${job.slug}) |\n`;
+        // Sanitize toàn bộ data để bảng không bao giờ vỡ
+        let safeCompany = sanitizeMarkdown(job.company);
+        let safeSalary = sanitizeMarkdown(salary);
+        let safeStack = sanitizeMarkdown(stackInfo);
+
+        // 🎯 TUYỆT KỸ SEO: Gắn link thẳng vào Job Title (Bỏ cột Apply dư thừa)
+        // Đảm bảo URL có dấu / trước ?slug= để chuẩn format
+        const jobUrl = `${WEBSITE_URL}/?slug=${job.slug}`;
+        
+        md += `| [**${shortTitle}**](${jobUrl}) | ${safeCompany} | ${safeSalary} | ${safeStack} |\n`;
     });
 
-    md += `\n---\n*Bot updated at: ${new Date().toISOString()}*\n`;
-    md += `\n📂 **[View Previous Days in Archive](./archive/)**`;
+    md += `\n---\n*Bot updated automatically at: ${new Date().toISOString()}*\n`;
+    md += `\n📂 **[Browse Previous Days in Archive](./archive/)**`;
     return md;
 }
 
@@ -88,7 +96,7 @@ async function run() {
         return;
     }
 
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0]; 
     const markdownContent = generateMarkdown(jobs, today);
 
     // 1. Cập nhật README.md
@@ -100,8 +108,15 @@ async function run() {
     if (!fs.existsSync(archiveDir)){
         fs.mkdirSync(archiveDir);
     }
+    
+    // SEO TỐI ƯU: Cho Archive file một cái tiêu đề khác đi một chút để tránh trùng lặp nội dung 100%
+    const archiveMarkdown = markdownContent.replace(
+        `# 🎯 Awesome Remote Software Jobs (2026)`, 
+        `# 🗄️ Job Archive: ${today}`
+    );
+
     const archivePath = path.join(archiveDir, `${today}-remote-jobs.md`);
-    fs.writeFileSync(archivePath, markdownContent);
+    fs.writeFileSync(archivePath, archiveMarkdown);
     console.log(`✅ Created archive: ${archivePath}`);
 }
 
