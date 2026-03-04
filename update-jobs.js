@@ -5,6 +5,13 @@ const path = require('path');
 const API_URL = "https://www.jobsniper.pro/api/jobs";
 const WEBSITE_URL = "https://jobsniper.pro";
 
+// FIX: Hàm tiện ích giúp dọn dẹp text, chống vỡ bảng Markdown
+function sanitizeMarkdown(text) {
+    if (!text) return "N/A";
+    // Xóa dấu | và ký tự xuống dòng để không làm hỏng cấu trúc bảng
+    return String(text).replace(/\|/g, '-').replace(/[\r\n]+/g, ' ').trim();
+}
+
 async function fetchTopJobs() {
     try {
         console.log(`Fetching jobs from API: ${API_URL}...`);
@@ -28,7 +35,11 @@ async function fetchTopJobs() {
         });
 
         // Sắp xếp mới nhất lên đầu (đề phòng API trả về lộn xộn)
-        cleanJobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        cleanJobs.sort((a, b) => {
+            const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return timeB - timeA;
+        });
         
         // Lấy đúng 10 job đầu tiên
         return cleanJobs.slice(0, 10); 
@@ -59,7 +70,8 @@ function generateMarkdown(jobs, dateString) {
         
         // Cắt ngắn title nếu quá dài để bảng Markdown không bị vỡ
         const shortTitle = job.title.length > 45 ? job.title.substring(0, 42) + "..." : job.title;
-        
+        shortTitle = sanitizeMarkdown(shortTitle);
+
         md += `| **${shortTitle}** | ${job.company} | ${salary} | ${stackInfo} | [View Details](${WEBSITE_URL}?slug=${job.slug}) |\n`;
     });
 
