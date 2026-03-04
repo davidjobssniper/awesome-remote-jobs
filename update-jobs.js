@@ -47,6 +47,7 @@ function generateMarkdown(jobs, dateString) {
     let md = `# 🎯 Awesome Remote Software Jobs (2026)
 
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
+![Updated](https://img.shields.io/badge/Last_Update-Today-blue?style=for-the-badge)
 
 *A daily curated list of high-paying, verified remote developer jobs for Senior Engineers.*
 
