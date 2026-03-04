@@ -1,37 +1,39 @@
 // update-jobs.js
 const fs = require('fs');
 const path = require('path');
-const AWS = require('aws-sdk');
 
-const REGION = process.env.AWS_REGION || "us-east-1";
-const TABLE_NAME = "JobSniper_Jobs";
+const API_URL = "https://www.jobsniper.pro/api/jobs";
 const WEBSITE_URL = "https://jobsniper.pro";
-
-// Cấu hình AWS SDK đọc từ Environment Variables (GitHub Secrets)
-AWS.config.update({
-    region: REGION,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
-
-const db = new AWS.DynamoDB.DocumentClient();
 
 async function fetchTopJobs() {
     try {
-        const data = await db.scan({
-            TableName: TABLE_NAME,
-            Limit: 50, // Lấy nhiều xíu để đủ 10 job mới nhất
-            FilterExpression: "attribute_exists(#desc) AND #desc <> :empty",
-            ExpressionAttributeNames: { "#desc": "desc" },
-            ExpressionAttributeValues: { ":empty": "" }
-        }).promise();
+        console.log(`Fetching jobs from API: ${API_URL}...`);
+        const response = await fetch(API_URL);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        let jobsList = data.jobs || [];
 
-        let allJobs = data.Items || [];
-        // Lấy 10 job mới nhất không phân biệt ngôn ngữ
-        allJobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        return allJobs.slice(0, 10); 
+        // Xử lý cấu trúc JSON đặc thù của Chúa công (lồng trong key "0", "1",...)
+        const cleanJobs = jobsList.map(item => {
+            const keys = Object.keys(item);
+            // Nếu item có dạng { "0": { title: "..." } }, ta rút lõi nó ra
+            if (keys.length === 1 && !isNaN(keys[0])) {
+                return item[keys[0]];
+            }
+            return item; // Trả về nguyên bản nếu là object bình thường
+        });
+
+        // Sắp xếp mới nhất lên đầu (đề phòng API trả về lộn xộn)
+        cleanJobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
+        // Lấy đúng 10 job đầu tiên
+        return cleanJobs.slice(0, 10); 
     } catch (e) {
-        console.error("DB Error:", e);
+        console.error("❌ API Fetch Error:", e);
         return [];
     }
 }
@@ -52,9 +54,11 @@ function generateMarkdown(jobs, dateString) {
 
     jobs.forEach(job => {
         const salary = job.salary && job.salary !== "Negotiable" ? job.salary : "Competitive";
-        const stackInfo = job.interview_data?.keywords ? job.interview_data.keywords.slice(0, 2).join(', ') : "Various";
-        // Cắt ngắn title nếu dài quá
-        const shortTitle = job.title.length > 40 ? job.title.substring(0, 37) + "..." : job.title;
+        // Vì API trả về mảng tags, ta lấy tối đa 2 tag đầu tiên hiển thị cho gọn
+        const stackInfo = (job.tags && job.tags.length > 0) ? job.tags.slice(0, 2).join(', ') : "Various";
+        
+        // Cắt ngắn title nếu quá dài để bảng Markdown không bị vỡ
+        const shortTitle = job.title.length > 45 ? job.title.substring(0, 42) + "..." : job.title;
         
         md += `| **${shortTitle}** | ${job.company} | ${salary} | ${stackInfo} | [View Details](${WEBSITE_URL}?slug=${job.slug}) |\n`;
     });
@@ -65,18 +69,17 @@ function generateMarkdown(jobs, dateString) {
 }
 
 async function run() {
-    console.log("Fetching jobs from DynamoDB...");
     const jobs = await fetchTopJobs();
     
     if (jobs.length === 0) {
-        console.log("No jobs found. Exiting.");
+        console.log("⚠️ No jobs found or API failed. Exiting.");
         return;
     }
 
     const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
     const markdownContent = generateMarkdown(jobs, today);
 
-    // 1. Cập nhật README.md (Trang chủ)
+    // 1. Cập nhật README.md
     fs.writeFileSync('README.md', markdownContent);
     console.log("✅ Updated README.md");
 
