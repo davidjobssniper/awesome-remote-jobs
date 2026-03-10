@@ -3,7 +3,12 @@
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
 ![Updated](https://img.shields.io/badge/Last_Update-Today-blue?style=for-the-badge)
 
-*A daily curated list of high-paying, verified remote developer jobs for Senior Engineers.*
+> [!IMPORTANT]
+> ### 🚀 $35,000 ACQUISITION BOUNTY (PHASE 1 OPEN)
+> We are hosting a private Hackathon to build elite tools (Extensions, Bots, Dashboards) on top of this verified job data pipeline. 
+> **Acquisition Model:** We don't just give prizes; we buy the winning codebases for up to **$20k per project**. 
+> **Deadline:** Phase 1 (Technical Verification) closes **April 15, 2026**.
+> 👉 [**Secure your API Keys & Join the Waitlist**](${HACKATHON_URL})
 
 🔥 **[Join our Elite JobSniper Platform to get real-time alerts](https://jobsniper.pro)**
 
