@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 const API_URL = "https://www.jobsniper.pro/api/jobs";
-const WEBSITE_URL = "https://jobsniper.pro";
-const HACKATHON_URL = "https://jobsniper.pro/hackathon.html";
+const WEBSITE_URL = "https://www.jobsniper.pro";
+const HACKATHON_URL = "https://www.jobsniper.pro/hackathon.html";
 
 function sanitizeMarkdown(text) {
     if (!text) return "N/A";
