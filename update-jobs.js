@@ -13,10 +13,14 @@ function sanitizeMarkdown(text) {
 }
 
 async function fetchTopJobs() {
-    try {
-        console.log(`Fetching jobs from API: ${API_URL}...`);
-        const response = await fetch(API_URL);
-        
+    try 
+        const response = await fetch(API_URL, {
+            method: 'GET',
+            headers: {
+                'User-Agent': 'actions-github-jobsniper',
+                'Accept': 'application/json'
+            }
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
