@@ -2,7 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const API_URL = "https://www.jobsniper.pro/api/jobs";
+const KEY_PUBLIC = process.env.KEY_PUBLIC;
+const API_URL = "https://www.jobsniper.pro/api/jobs?key=" + KEY_PUBLIC;
 const WEBSITE_URL = "https://www.jobsniper.pro";
 const HACKATHON_URL = "https://www.jobsniper.pro/hackathon.html";
 
