@@ -22,9 +22,11 @@ jobs:
           node-version: '18'
 
       - name: Run API Fetcher Script
+        env:
+          KEY_PUBLIC: ${{ secrets.KEY_PUBLIC }}
         run: node update-jobs.js
 
-      - name: Commit and Push Changes
+      - name: Commit and Push Changes        
         run: |
           git config --global user.name "David Stark"
           git config --global user.email "davidjobssniper@users.noreply.github.com"
