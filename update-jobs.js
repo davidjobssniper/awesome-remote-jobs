@@ -17,7 +17,7 @@ async function fetchTopJobs() {
         const response = await fetch(API_URL, {
             method: 'GET',
             headers: {
-                'User-Agent': 'actions-github-jobsniper',
+                'User-Agent': 'github-actions-jobsniper',
                 'Accept': 'application/json'
             }
         });
