@@ -13,7 +13,7 @@ function sanitizeMarkdown(text) {
 }
 
 async function fetchTopJobs() {
-    try 
+    try {
         const response = await fetch(API_URL, {
             method: 'GET',
             headers: {
