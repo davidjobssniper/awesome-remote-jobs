@@ -1,8 +1,9 @@
-// update-jobs.js
+// update-jobs.ts
 const fs = require('fs');
 const path = require('path');
 
 const KEY_PUBLIC = process.env.KEY_PUBLIC;
+// Vẫn dùng API Web để cày Traffic và Backlink SEO
 const API_URL = "https://www.jobsniper.pro/api/jobs?key=" + KEY_PUBLIC;
 const WEBSITE_URL = "https://www.jobsniper.pro";
 const HACKATHON_URL = "https://www.jobsniper.pro/hackathon.html";
@@ -28,6 +29,7 @@ async function fetchTopJobs() {
         const data = await response.json();
         let jobsList = data.jobs || [];
 
+        // Logic làm sạch data gốc của Chúa công
         const cleanJobs = jobsList.map(item => {
             const keys = Object.keys(item);
             if (keys.length === 1 && !isNaN(keys[0])) {
@@ -36,13 +38,14 @@ async function fetchTopJobs() {
             return item;
         });
 
+        // Sắp xếp lấy mới nhất
         cleanJobs.sort((a, b) => {
             const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
             const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
             return timeB - timeA;
         });
-        
-        return cleanJobs.slice(0, 10); 
+
+        return cleanJobs.slice(0, 10);
     } catch (e) {
         console.error("❌ API Fetch Error:", e);
         return [];
@@ -59,10 +62,10 @@ function generateMarkdown(jobs, dateString) {
 > ### 🚀 $35,000 ACQUISITION BOUNTY (PHASE 1 OPEN)
 > We are hosting a private Hackathon to build elite tools (Extensions, Bots, Dashboards) on top of this verified job data pipeline. 
 > **Acquisition Model:** We don't just give prizes; we buy the winning codebases for up to **$20k per project**. 
-> **Deadline:** Phase 1 (Technical Verification) closes **April 15, 2026**.
+> **Deadline:** Phase 1 (Registration & API Verification) closes **May 08, 2026**.
 > 👉 [**Secure your API Keys & Join the Waitlist**](${HACKATHON_URL})
 
-🔥 **[Join our Elite JobSniper Platform to get real-time alerts](${WEBSITE_URL})**
+🔥 **[Secure your 1-Month VIP Access to our Private 'No Ghost Jobs' Pipeline](${WEBSITE_URL})**
 
 ---
 
