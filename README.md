@@ -30,6 +30,6 @@
 | [**Lehrkraft für E-Commerce & Marktplatzmanagement**](https://www.jobsniper.pro/?slug=lehrkraft-f-r-e-commerce-marktplatzmanagement-remote-company-9cc4860a4906) | Remote Company | N/A | Backend |
 
 ---
-*Updated at: 2026-04-27T07:35:43.404Z*
+*Updated at: 2026-04-27T10:04:00.718Z*
 
 📂 **[Browse Previous Days in Archive](./archive/)**
