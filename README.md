@@ -23,6 +23,7 @@
 
 | Role (Click to Apply) | Company | Salary | Tech Stack |
 |-----------------------|---------|--------|------------|
+| [**Mac MSP Help Desk Guru (work from home)**](https://www.jobsniper.pro/?slug=mac-msp-help-desk-guru-work-from-home-ignition-inc-fa4533905226) | Ignition, Inc. | $50,000–$65,000/yr (USA Junior), Higher for Senior. Varies for international applicants | macOS, iOS |
 | [**Staff Product Engineer (São Paulo)**](https://www.jobsniper.pro/?slug=staff-product-engineer-s-o-paulo-lawnstarter-b86302c04e8e) | LawnStarter | $80,000-$100,000 USD | AWS, PHP/Laravel |
 | [**Staff Product Engineer (Campinas)**](https://www.jobsniper.pro/?slug=staff-product-engineer-campinas-lawnstarter-3c0f1fb5aa46) | LawnStarter | USD $80,000–$100,000 | AWS, PHP/Laravel |
 | [**Staff Product Engineer (Porto Alegre)**](https://www.jobsniper.pro/?slug=staff-product-engineer-porto-alegre-lawnstarter-273b0c3438ca) | LawnStarter | USD $80,000–$100,000 | AWS, PHP/Laravel |
@@ -32,9 +33,8 @@
 | [**Mid/Senior AI Cinematic Video Editor**](https://www.jobsniper.pro/?slug=mid-senior-ai-cinematic-video-editor-everai-33e6c272caed) | EverAI | Competitive, based on experience | Kling, Seedance |
 | [**DevOps Engineer**](https://www.jobsniper.pro/?slug=devops-engineer-interop-labs-a77bad3e9241) | Interop Labs | $120,000 - $180,000 | Kubernetes, Terraform |
 | [**DevOps Engineer**](https://www.jobsniper.pro/?slug=devops-engineer-clo-virtual-fashion-d9fc5c7274e7) | Clo Virtual Fashion | Undisclosed | AWS, Azure |
-| [**Senior Full Stack Developer**](https://www.jobsniper.pro/?slug=senior-full-stack-developer-anthill-7326bdf5f101) | Anthill | Competitive Salary | Python, TypeScript |
 
 ---
-*Updated at: 2026-05-28T07:03:22.408Z*
+*Updated at: 2026-05-28T11:27:00.271Z*
 
 📂 **[Browse Previous Days in Archive](./archive/)**
