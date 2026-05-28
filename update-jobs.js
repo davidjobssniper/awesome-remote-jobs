@@ -59,13 +59,18 @@ function generateMarkdown(jobs, dateString) {
 ![Updated](https://img.shields.io/badge/Last_Update-Today-blue?style=for-the-badge)
 
 > [!IMPORTANT]
-> ### 🚀 $35,000 ACQUISITION BOUNTY (PHASE 1 OPEN)
-> We are hosting a private Hackathon to build elite tools (Extensions, Bots, Dashboards) on top of this verified job data pipeline. 
-> **Acquisition Model:** We don't just give prizes; we buy the winning codebases for up to **$20k per project**. 
-> **Deadline:** Phase 1 (Registration & API Verification) closes **May 08, 2026**.
-> 👉 [**Secure your API Keys & Join the Waitlist**](${HACKATHON_URL})
+> ### 🛑 STOP DOING 7-ROUND HR INTERVIEWS
+> We are actively bypassing the broken HR screening process. We hold direct contracts with hiring CTOs for high-ticket remote roles ($120k - $250k). They don't want to read your CV. They want to see your architecture.
+> 
+> **The CTO Firewall Deal:**
+> 1. Pick a role from the list below.
+> 2. Accept the technical challenge and submit your system design.
+> 3. **The Fast-Track:** If your architecture clears our technical audit (Score > 7.0), your profile goes straight to the decision-maker. 0 HR rounds.
+> 4. **Monthly Bounty:** The top-rated architecture submission each month wins a **$500 Cash Prize**.
+> 
+> 👉 [**Prove Your Architecture Skills & Bypass HR Now**](https://www.jobsniper.pro)
 
-🔥 **[Secure your 1-Month VIP Access to our Private 'No Ghost Jobs' Pipeline](${WEBSITE_URL})**
+🔥 **We update these direct-to-CTO pipelines daily. Don't let your CV rot in an inbox. (${WEBSITE_URL})**
 
 ---
 
